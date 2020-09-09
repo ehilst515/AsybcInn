@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AsyncApp.Models;
 
 namespace AsyncApp.Data
 {
@@ -12,5 +13,6 @@ namespace AsyncApp.Data
         {
 
         }
+        public DbSet<AsyncApp.Models.Hotel> Hotel { get; set; }
     }
 }
