@@ -30,5 +30,5 @@ Then select and open ```AsynInn.sln```
 ### Visuals
 
 #### Diagram
-![Image 1](https://via.placeholder.com/750x500)
+![Diagram Image](../Assests/AsyncInn.png)
 
