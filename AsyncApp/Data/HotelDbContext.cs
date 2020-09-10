@@ -14,6 +14,39 @@ namespace AsyncApp.Data
 
         }
 
-        public DbSet<AsyncApp.Models.Hotel> Hotel { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Hotel>()
+                .HasData(
+                    new Hotel { Id = 1, Name = "Async Inn", StreetAdress = "123 Sync Street", City = "Des Moines", State = "Iowa", Phone = "515-555-1234" },
+                    new Hotel { Id = 2, Name = "Async Motel", StreetAdress = "1858 Cyclone Lane", City = "Ames", State = "Iowa", Phone = "515-294-1111" },
+                    new Hotel { Id = 3, Name = "Async Suites", StreetAdress = "5050 Morning Star Court", City = "Pleasant Hill", State = "Iowa", Phone = "515-299-1234" }
+                );
+
+            modelBuilder.Entity<Room>()
+                .HasData(
+                    new Room { Id = 1, Name = "Studio", Layout = 0 },
+                    new Room { Id = 2, Name = "OneBedroom", Layout = 1 },
+                    new Room { Id = 3, Name = "TwoBedroom", Layout = 2 }
+                );
+
+            modelBuilder.Entity<Amenities>()
+                 .HasData(
+                    new Amenities { Id = 1, Name = "WiFi" },
+                    new Amenities { Id = 2, Name = "Air Conditioning" },
+                    new Amenities { Id = 3, Name = "Coffee Maker" }
+                );
+        }
+
+
+        public DbSet<Hotel> Hotel { get; set; }
+
+        public DbSet<Room> Room { get; set; }
+
+        public DbSet<Amenities> Amenities { get; set; }
+
     }
 }
