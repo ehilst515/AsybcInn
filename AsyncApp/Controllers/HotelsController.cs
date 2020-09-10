@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AsyncApp.Data;
 using AsyncApp.Models;
+using AsyncApp.Services;
 
 namespace AsyncApp.Controllers
 {
@@ -14,18 +15,20 @@ namespace AsyncApp.Controllers
     [ApiController]
     public class HotelsController : ControllerBase
     {
+        private readonly IHotelRepository repository;
         private readonly HotelDbContext _context;
 
-        public HotelsController(HotelDbContext context)
+        public HotelsController(IHotelRepository repository, HotelDbContext context)
         {
             _context = context;
+            this.repository = repository;
         }
 
         // GET: api/Hotels
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotel()
+        public async Task<IEnumerable<Hotel>> GetHotel()
         {
-            return await _context.Hotel.ToListAsync();
+            return await repository.GetAllAsync();
         }
 
         // GET: api/Hotels/5

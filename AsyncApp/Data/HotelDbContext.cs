@@ -41,7 +41,6 @@ namespace AsyncApp.Data
                 );
         }
 
-
         public DbSet<Hotel> Hotel { get; set; }
 
         public DbSet<Room> Room { get; set; }
