@@ -16,10 +16,10 @@ namespace AsyncApp
 {
     public class Startup
     {
-        // 1. 
+        // 1. Propery to hold configuration
         public IConfiguration Configuration { get; }
 
-        // 2. 
+        // 2. Constructor to receive configuration
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -30,9 +30,9 @@ namespace AsyncApp
         public void ConfigureServices(IServiceCollection services)
         {
             // 3. Register DbContext with the app
-            services.AddDbContext<SchoolDbContext>(options =>
+            services.AddDbContext<HotelDbContext>(options =>
             {
-                // DATABASE_URL
+                // DATABASE_URL equivalent 
                 string connectionString = Configuration.GetConnectionString("DefaultConnection");
                 options.UseSqlServer(connectionString);
             });

@@ -7,12 +7,13 @@ using AsyncApp.Models;
 
 namespace AsyncApp.Data
 {
-    public class SchoolDbContext : DbContext
+    public class HotelDbContext : DbContext
     {
-        public SchoolDbContext(DbContextOptions options) : base(options)
+        public HotelDbContext(DbContextOptions options) : base(options)
         {
 
         }
+
         public DbSet<AsyncApp.Models.Hotel> Hotel { get; set; }
     }
 }
