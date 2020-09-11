@@ -15,7 +15,7 @@ namespace AsyncApp.Services
         Task<Hotel> GetOneHotelById(long id);
 
         Task CreateHotel(Hotel hotel);
-        Task<Hotel> UpdateOneHotelById(long id, Hotel hotel);
+        Task<bool> UpdateOneHotel(Hotel hotel);
         Task<Hotel> DeleteOneHotelById(long id);
     }
 
@@ -60,14 +60,29 @@ namespace AsyncApp.Services
             return hotel;
         }
 
-        public Task<Hotel> UpdateOneHotelById(long id, Hotel hotel)
+        public async Task<bool> UpdateOneHotel(Hotel hotel)
         {
-            throw new NotImplementedException();
+            _context.Entry(hotel).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await HotelExists((int)hotel.Id))
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return true;
         }
-
-        private bool HotelExists(long id)
+        private async Task<bool> HotelExists(int id)
         {
-            return _context.Hotel.Any(e => e.Id == id);
+            return await _context.Hotel.AnyAsync(e => e.Id == id);
         }
     }
 }

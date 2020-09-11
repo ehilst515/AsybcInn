@@ -55,25 +55,11 @@ namespace AsyncApp.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(hotel).State = EntityState.Modified;
-
-            try
+            bool didUpdate = await repository.UpdateOneHotel(hotel);
+            if (didUpdate == false)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!HotelExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
             return NoContent();
         }
 
@@ -104,10 +90,6 @@ namespace AsyncApp.Controllers
             return hotel;
         }
 
-        private bool HotelExists(long id)
-        {
-            return _context.Hotel.Any(e => e.Id == id);
-        }
 
     }
 }
