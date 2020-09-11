@@ -28,7 +28,7 @@ namespace AsyncApp.Controllers
         [HttpGet]
         public async Task<IEnumerable<Amenity>> GetAmenity()
         {
-            return await repository.GetAllAsync();
+            return await repository.GetAllAmenities();
         }
 
         // GET: api/Amenity/5
@@ -49,31 +49,17 @@ namespace AsyncApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAmenity(int id, Amenity Amenity)
+        public async Task<IActionResult> PutAmenity(int id, Amenity amenity)
         {
-            if (id != Amenity.Id)
+            if (id != amenity.Id)
             {
                 return BadRequest();
             }
-
-            _context.Entry(Amenity).State = EntityState.Modified;
-
-            try
+            bool didUpdate = await repository.UpdateAmenity(amenity);
+            if (didUpdate == false)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AmenityExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
             return NoContent();
         }
 
@@ -81,33 +67,27 @@ namespace AsyncApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Amenity>> PostAmenity(Amenity Amenity)
+        public async Task<ActionResult<Amenity>> PostAmenity(Amenity amenity)
         {
-            _context.Amenity.Add(Amenity);
-            await _context.SaveChangesAsync();
+            await repository.CreateAmenity(amenity);
 
-            return CreatedAtAction("GetAmenity", new { id = Amenity.Id }, Amenity);
+            return CreatedAtAction("GetAmenity", new { id = amenity.Id }, amenity);
         }
 
         // DELETE: api/Amenity/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Amenity>> DeleteAmenity(int id)
         {
-            var Amenity = await _context.Amenity.FindAsync(id);
-            if (Amenity == null)
+            var amenity = await _context.Amenity.FindAsync(id);
+            if (amenity == null)
             {
                 return NotFound();
             }
 
-            _context.Amenity.Remove(Amenity);
+            _context.Amenity.Remove(amenity);
             await _context.SaveChangesAsync();
 
-            return Amenity;
-        }
-
-        private bool AmenityExists(int id)
-        {
-            return _context.Amenity.Any(e => e.Id == id);
+            return amenity;
         }
     }
 }

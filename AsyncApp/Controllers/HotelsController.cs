@@ -89,7 +89,5 @@ namespace AsyncApp.Controllers
 
             return hotel;
         }
-
-
     }
 }

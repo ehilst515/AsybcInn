@@ -9,67 +9,67 @@ using System.Threading.Tasks;
 
 namespace AsyncApp.Services
 {
-    public interface IHotelRepository
+    public interface IRoomRepository
     {
-        Task<IEnumerable<Hotel>> GetAllAsync();
-        Task<Hotel> GetOneHotelById(long id);
+        Task<IEnumerable<Room>> GetAllAsync();
+        Task<Room> GetOneRoomById(long id);
 
-        Task CreateHotel(Hotel hotel);
-        Task<bool> UpdateOneHotel(Hotel hotel);
-        Task<Hotel> DeleteOneHotelById(long id);
+        Task CreateRoom(Room room);
+        Task<bool> UpdateOneRoom(Room room);
+        Task<Room> DeleteOneRoomById(long id);
     }
 
-    public class DatabaseHotelRepository: IHotelRepository
+    public class DatabaseRoomRepository: IRoomRepository
     {
         private readonly HotelDbContext _context;
 
-        public DatabaseHotelRepository(HotelDbContext context)
+        public DatabaseRoomRepository(HotelDbContext context)
         {
             _context = context;
         }
 
-        public async Task CreateHotel(Hotel hotel)
+        public async Task CreateRoom(Room room)
         {
-            _context.Hotel.Add(hotel);
+            _context.Room.Add(room);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Hotel> DeleteOneHotelById(long id)
+        public async Task<Room> DeleteOneRoomById(long id)
         {
-            var hotel = await _context.Hotel.FindAsync(id);
+            var room = await _context.Room.FindAsync(id);
 
-            if (hotel == null)
+            if (room == null)
             {
                 return null;
             }
 
-            _context.Hotel.Remove(hotel);
+            _context.Room.Remove(room);
             await _context.SaveChangesAsync();
 
-            return hotel;
+            return room;
         }
 
-        public async Task<IEnumerable<Hotel>> GetAllAsync()
+        public async Task<IEnumerable<Room>> GetAllAsync()
         {
-            return await _context.Hotel.ToListAsync();
+            return await _context.Room.ToListAsync();
         }
 
-        public async Task<Hotel> GetOneHotelById(long id)
+        public async Task<Room> GetOneRoomById(long id)
         {
-            var hotel = await _context.Hotel.FindAsync(id);
-            return hotel;
+            var room = await _context.Room.FindAsync(id);
+            return room;
         }
 
-        public async Task<bool> UpdateOneHotel(Hotel hotel)
+        public async Task<bool> UpdateOneRoom(Room room)
         {
-            _context.Entry(hotel).State = EntityState.Modified;
+            _context.Entry(room).State = EntityState.Modified;
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await HotelExists((int)hotel.Id))
+                if (!await RoomExists((int)room.Id))
                 {
                     return false;
                 }
@@ -80,9 +80,9 @@ namespace AsyncApp.Services
             }
             return true;
         }
-        private async Task<bool> HotelExists(int id)
+        private async Task<bool> RoomExists(int id)
         {
-            return await _context.Hotel.AnyAsync(e => e.Id == id);
+            return await _context.Room.AnyAsync(e => e.Id == id);
         }
     }
 }
