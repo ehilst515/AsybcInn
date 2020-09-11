@@ -34,9 +34,19 @@ namespace AsyncApp.Services
             await _context.SaveChangesAsync();
         }
 
-        public Task<Hotel> DeleteOneHotelById(long id)
+        public async Task<Hotel> DeleteOneHotelById(long id)
         {
-            throw new NotImplementedException();
+            var hotel = await _context.Hotel.FindAsync(id);
+
+            if (hotel == null)
+            {
+                return null;
+            }
+
+            _context.Hotel.Remove(hotel);
+            await _context.SaveChangesAsync();
+
+            return hotel;
         }
 
         public async Task<IEnumerable<Hotel>> GetAllAsync()
@@ -53,6 +63,11 @@ namespace AsyncApp.Services
         public Task<Hotel> UpdateOneHotelById(long id, Hotel hotel)
         {
             throw new NotImplementedException();
+        }
+
+        private bool HotelExists(long id)
+        {
+            return _context.Hotel.Any(e => e.Id == id);
         }
     }
 }

@@ -108,5 +108,6 @@ namespace AsyncApp.Controllers
         {
             return _context.Hotel.Any(e => e.Id == id);
         }
+
     }
 }
