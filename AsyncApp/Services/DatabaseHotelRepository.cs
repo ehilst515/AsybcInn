@@ -14,7 +14,7 @@ namespace AsyncApp.Services
         Task<IEnumerable<Hotel>> GetAllAsync();
         Task<Hotel> GetOneHotelById(long id);
 
-        Task<Hotel> CreateHotel(Hotel hotel);
+        Task CreateHotel(Hotel hotel);
         Task<Hotel> UpdateOneHotelById(long id, Hotel hotel);
         Task<Hotel> DeleteOneHotelById(long id);
     }
@@ -28,9 +28,10 @@ namespace AsyncApp.Services
             _context = context;
         }
 
-        public Task<Hotel> CreateHotel(Hotel hotel)
+        public async Task CreateHotel(Hotel hotel)
         {
-            throw new NotImplementedException();
+            _context.Hotel.Add(hotel);
+            await _context.SaveChangesAsync();
         }
 
         public Task<Hotel> DeleteOneHotelById(long id)
