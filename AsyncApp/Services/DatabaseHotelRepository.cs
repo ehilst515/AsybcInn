@@ -12,11 +12,11 @@ namespace AsyncApp.Services
     public interface IHotelRepository
     {
         Task<IEnumerable<Hotel>> GetAllAsync();
-        Task<Hotel> GetOneHotelById(int id);
+        Task<Hotel> GetOneHotelById(long id);
 
         Task<Hotel> CreateHotel(Hotel hotel);
-        Task<Hotel> UpdateOneHotelById(int id, Hotel hotel);
-        Task<Hotel> DeleteOneHotelById(int id);
+        Task<Hotel> UpdateOneHotelById(long id, Hotel hotel);
+        Task<Hotel> DeleteOneHotelById(long id);
     }
 
     public class DatabaseHotelRepository: IHotelRepository
@@ -33,7 +33,7 @@ namespace AsyncApp.Services
             throw new NotImplementedException();
         }
 
-        public Task<Hotel> DeleteOneHotelById(int id)
+        public Task<Hotel> DeleteOneHotelById(long id)
         {
             throw new NotImplementedException();
         }
@@ -43,13 +43,13 @@ namespace AsyncApp.Services
             return await _context.Hotel.ToListAsync();
         }
 
-        public async Task<Hotel> GetOneHotelById(int id)
+        public async Task<Hotel> GetOneHotelById(long id)
         {
             var hotel = await _context.Hotel.FindAsync(id);
             return hotel;
         }
 
-        public Task<Hotel> UpdateOneHotelById(int id, Hotel hotel)
+        public Task<Hotel> UpdateOneHotelById(long id, Hotel hotel)
         {
             throw new NotImplementedException();
         }
