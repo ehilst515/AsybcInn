@@ -29,6 +29,9 @@ Then select and open ```AsynInn.sln```
 
 ### Visuals
 
-#### Diagram
-![Diagram Image](./Assests/AsyncInn.png)
+#### Database Diagram 
+![Diagram Image](./Assests/AsyncInnERDFinal.png)
+
+#### Initial Diagram
+![Initial Diagram Image](./Assests/AsyncInn.png)
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AsyncApp.Data;
 using AsyncApp.Models;
+using AsyncApp.Services;
 
 namespace AsyncApp.Controllers
 {
@@ -14,25 +15,27 @@ namespace AsyncApp.Controllers
     [ApiController]
     public class HotelsController : ControllerBase
     {
+        private readonly IHotelRepository repository;
         private readonly HotelDbContext _context;
 
-        public HotelsController(HotelDbContext context)
+        public HotelsController(IHotelRepository repository, HotelDbContext context)
         {
             _context = context;
+            this.repository = repository;
         }
 
         // GET: api/Hotels
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotel()
+        public async Task<IEnumerable<Hotel>> GetHotel()
         {
-            return await _context.Hotel.ToListAsync();
+            return await repository.GetAllAsync();
         }
 
         // GET: api/Hotels/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Hotel>> GetHotel(long id)
         {
-            var hotel = await _context.Hotel.FindAsync(id);
+            var hotel = await repository.GetOneHotelById(id);
 
             if (hotel == null)
             {
@@ -52,25 +55,11 @@ namespace AsyncApp.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(hotel).State = EntityState.Modified;
-
-            try
+            bool didUpdate = await repository.UpdateOneHotel(hotel);
+            if (didUpdate == false)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!HotelExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
             return NoContent();
         }
 
@@ -80,8 +69,7 @@ namespace AsyncApp.Controllers
         [HttpPost]
         public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
         {
-            _context.Hotel.Add(hotel);
-            await _context.SaveChangesAsync();
+            await repository.CreateHotel(hotel);
 
             return CreatedAtAction("GetHotel", new { id = hotel.Id }, hotel);
         }
@@ -102,9 +90,6 @@ namespace AsyncApp.Controllers
             return hotel;
         }
 
-        private bool HotelExists(long id)
-        {
-            return _context.Hotel.Any(e => e.Id == id);
-        }
+
     }
 }
