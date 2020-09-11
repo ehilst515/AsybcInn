@@ -14,7 +14,6 @@ namespace AsyncApp.Data
 
         }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //base.OnModelCreating(modelBuilder);
@@ -33,11 +32,11 @@ namespace AsyncApp.Data
                     new Room { Id = 3, Name = "TwoBedroom", Layout = 2 }
                 );
 
-            modelBuilder.Entity<Amenities>()
+            modelBuilder.Entity<Amenity>()
                  .HasData(
-                    new Amenities { Id = 1, Name = "WiFi" },
-                    new Amenities { Id = 2, Name = "Air Conditioning" },
-                    new Amenities { Id = 3, Name = "Coffee Maker" }
+                    new Amenity { Id = 1, Name = "WiFi" },
+                    new Amenity { Id = 2, Name = "Air Conditioning" },
+                    new Amenity { Id = 3, Name = "Coffee Maker" }
                 );
         }
 
@@ -45,7 +44,7 @@ namespace AsyncApp.Data
 
         public DbSet<Room> Room { get; set; }
 
-        public DbSet<Amenities> Amenities { get; set; }
+        public DbSet<Amenity> Amenity { get; set; }
 
     }
 }

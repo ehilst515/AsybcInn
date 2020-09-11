@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AsyncApp.Models
 {
-    public class Amenities
+    public class Amenity
     {
         public int Id { get; set; }
 
