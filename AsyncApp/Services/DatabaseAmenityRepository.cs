@@ -13,7 +13,7 @@ namespace AsyncApp.Services
     {
         Task<IEnumerable<Amenity>> GetAllAmenities();
         Task<bool> UpdateAmenity(Amenity amenity);
-
+        Task<Amenity> GetAmenity (long id);
         Task CreateAmenity(Amenity amenity);
         
         Task<Amenity> DeleteOneAmenityById(long id);
@@ -52,6 +52,11 @@ namespace AsyncApp.Services
         public async Task<IEnumerable<Amenity>> GetAllAmenities()
         {
             return await _context.Amenity.ToListAsync();
+        }
+
+        public async Task<Amenity> GetAmenity(long id)
+        { 
+            var amenity = await _context.Amenity.FindAsync(id); return amenity;
         }
 
         public async Task<bool> UpdateAmenity(Amenity amenity)

@@ -13,5 +13,7 @@ namespace AsyncApp.Models
 
         public int Layout { get; set; }
 
+        public List<RoomAmenity> RoomAmenities { get; set; }
+
     }
 }

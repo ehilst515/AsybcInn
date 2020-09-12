@@ -11,22 +11,38 @@ namespace AsyncApp.Services
 {
     public interface IRoomRepository
     {
-        Task<IEnumerable<Room>> GetAllAsync();
-        Task<Room> GetOneRoomById(long id);
+        IEnumerable<Room> GetAllAsync();
+        Room GetOneRoomById(int id);
 
         Task CreateRoom(Room room);
         Task<bool> UpdateOneRoom(Room room);
-        Task<Room> DeleteOneRoomById(long id);
+        Task<Room> DeleteOneRoomById(int id);
+
+        Task AddAmenityToRoom(int roomId, long amenityId);
+        Task DeleteAmenityFromRoom(int roomId, long amenityId);
     }
 
     public class DatabaseRoomRepository: IRoomRepository
     {
         private readonly HotelDbContext _context;
 
+
         public DatabaseRoomRepository(HotelDbContext context)
         {
             _context = context;
         }
+
+        public async Task AddAmenityToRoom(int roomId, long amenityId)
+        {
+            var roomAmenity = new RoomAmenity
+            {
+                AmenityId = amenityId,
+                RoomId = roomId,
+            };
+            _context.RoomAmenities.Add(roomAmenity);
+            await _context.SaveChangesAsync();
+        }
+    
 
         public async Task CreateRoom(Room room)
         {
@@ -34,7 +50,14 @@ namespace AsyncApp.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Room> DeleteOneRoomById(long id)
+        public async Task DeleteAmenityFromRoom(int roomId, long amenityId)
+        {
+            var roomAmenity = await _context.RoomAmenities.FindAsync(roomId, amenityId);
+            _context.RoomAmenities.Remove(roomAmenity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<Room> DeleteOneRoomById(int id)
         {
             var room = await _context.Room.FindAsync(id);
 
@@ -49,15 +72,22 @@ namespace AsyncApp.Services
             return room;
         }
 
-        public async Task<IEnumerable<Room>> GetAllAsync()
+        public  IEnumerable<Room> GetAllAsync()
         {
-            return await _context.Room.ToListAsync();
+            //return await _context.Room.ToListAsync();
+            return _context.Room
+                .Include(r => r.RoomAmenities)
+                .ToList();
         }
 
-        public async Task<Room> GetOneRoomById(long id)
+        public Room GetOneRoomById(int id)
         {
-            var room = await _context.Room.FindAsync(id);
-            return room;
+            //var room = await _context.Room.FindAsync(id);
+            //return room;
+
+            return _context.Room
+                .Include(r => r.RoomAmenities)
+                .FirstOrDefault(r => r.Id == id);
         }
 
         public async Task<bool> UpdateOneRoom(Room room)

@@ -28,14 +28,14 @@ namespace AsyncApp.Controllers
         [HttpGet]
         public async Task<IEnumerable<Room>> GetRoom()
         {
-            return await repository.GetAllAsync();
+            return await _context.Room.ToListAsync();
         }
 
         // GET: api/Rooms/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Room>> GetRoom(long id)
+        public async Task<ActionResult<Room>> GetRoom(int id)
         {
-            var room = await repository.GetOneRoomById(id);
+            var room = await _context.Room.FindAsync(id);
 
             if (room == null)
             {
@@ -49,7 +49,7 @@ namespace AsyncApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRoom(long id, Room room)
+        public async Task<IActionResult> PutRoom(int id, Room room)
         {
             if (id != room.Id)
             {
@@ -76,7 +76,7 @@ namespace AsyncApp.Controllers
 
         // DELETE: api/Rooms/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Room>> DeleteRoom(long id)
+        public async Task<ActionResult<Room>> DeleteRoom(int id)
         {
             var room = await _context.Room.FindAsync(id);
             if (room == null)
@@ -90,6 +90,18 @@ namespace AsyncApp.Controllers
             return room;
         }
 
+        [HttpPost("{roomId}/Amenity/{amenityId}")]
+        public async Task<ActionResult<Amenity>> AddAmenityToRoom(int roomId, long amenityId)
+        {
+            await repository.AddAmenityToRoom(roomId, amenityId);
+            return CreatedAtAction(nameof(AddAmenityToRoom), new { roomId, amenityId }, null);
+        }
+        [HttpDelete("{roomId}/Amenity/{amenityId}")]
+        public async Task<ActionResult<Amenity>> DeleteAmenityFromRoom(int roomId, long amenityId)
+        {
+            await repository.DeleteAmenityFromRoom(roomId, amenityId);
+            return Ok();
+        }
 
     }
 }
