@@ -10,7 +10,7 @@ namespace AsyncApp.Models
     {
         public long AmenityId { get; set; }
 
-        public int RoomId { get; set; }
+        public long RoomId { get; set; }
 
 
         [ForeignKey(nameof(AmenityId))]

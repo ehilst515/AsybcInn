@@ -17,7 +17,7 @@ namespace AsyncApp.Controllers
     {
         private readonly IAmenityRepository repository;
 
-        public AmenityController(IAmenityRepository repository, HotelDbContext context)
+        public AmenityController(IAmenityRepository repository)
         {
             this.repository = repository;
         }

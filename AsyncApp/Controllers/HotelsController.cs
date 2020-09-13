@@ -78,14 +78,12 @@ namespace AsyncApp.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Hotel>> DeleteHotel(long id)
         {
-            var hotel = await _context.Hotel.FindAsync(id);
+            var hotel = await repository.DeleteOneHotelById(id);
+
             if (hotel == null)
             {
                 return NotFound();
             }
-
-            _context.Hotel.Remove(hotel);
-            await _context.SaveChangesAsync();
 
             return hotel;
         }

@@ -3,14 +3,16 @@ using AsyncApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AsyncApp.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200913171045_UpdatedNames")]
+    partial class UpdatedNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -108,9 +110,9 @@ namespace AsyncApp.Migrations
 
             modelBuilder.Entity("AsyncApp.Models.Room", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("Layout")
@@ -126,19 +128,19 @@ namespace AsyncApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1L,
+                            Id = 1,
                             Layout = 0,
                             Name = "Studio"
                         },
                         new
                         {
-                            Id = 2L,
+                            Id = 2,
                             Layout = 1,
                             Name = "OneBedroom"
                         },
                         new
                         {
-                            Id = 3L,
+                            Id = 3,
                             Layout = 2,
                             Name = "TwoBedroom"
                         });
@@ -149,8 +151,8 @@ namespace AsyncApp.Migrations
                     b.Property<long>("AmenityId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("RoomId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
 
                     b.HasKey("AmenityId", "RoomId");
 
