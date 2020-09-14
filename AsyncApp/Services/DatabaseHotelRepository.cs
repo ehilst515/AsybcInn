@@ -30,20 +30,20 @@ namespace AsyncApp.Services
 
         public async Task CreateHotel(Hotel hotel)
         {
-            _context.Hotel.Add(hotel);
+            _context.Hotels.Add(hotel);
             await _context.SaveChangesAsync();
         }
 
         public async Task<Hotel> DeleteOneHotelById(long id)
         {
-            var hotel = await _context.Hotel.FindAsync(id);
+            var hotel = await _context.Hotels.FindAsync(id);
 
             if (hotel == null)
             {
                 return null;
             }
 
-            _context.Hotel.Remove(hotel);
+            _context.Hotels.Remove(hotel);
             await _context.SaveChangesAsync();
 
             return hotel;
@@ -51,12 +51,12 @@ namespace AsyncApp.Services
 
         public async Task<IEnumerable<Hotel>> GetAllAsync()
         {
-            return await _context.Hotel.ToListAsync();
+            return await _context.Hotels.ToListAsync();
         }
 
         public async Task<Hotel> GetOneHotelById(long id)
         {
-            var hotel = await _context.Hotel.FindAsync(id);
+            var hotel = await _context.Hotels.FindAsync(id);
             return hotel;
         }
 
@@ -82,7 +82,7 @@ namespace AsyncApp.Services
         }
         private async Task<bool> HotelExists(int id)
         {
-            return await _context.Hotel.AnyAsync(e => e.Id == id);
+            return await _context.Hotels.AnyAsync(e => e.Id == id);
         }
     }
 }

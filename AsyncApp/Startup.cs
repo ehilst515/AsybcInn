@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AsyncApp.Data;
 using AsyncApp.Services;
 using Microsoft.AspNetCore.Builder;
@@ -41,7 +38,10 @@ namespace AsyncApp
             });
 
             services.AddTransient<IHotelRepository, DatabaseHotelRepository>();
+
             services.AddTransient<IAmenityRepository, DatabaseAmenityRepository>();
+
+            services.AddTransient<IRoomRepository, DatabaseRoomRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

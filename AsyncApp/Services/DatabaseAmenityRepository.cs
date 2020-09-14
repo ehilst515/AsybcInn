@@ -13,7 +13,7 @@ namespace AsyncApp.Services
     {
         Task<IEnumerable<Amenity>> GetAllAmenities();
         Task<bool> UpdateAmenity(Amenity amenity);
-
+        Task<Amenity> GetAmenity (long id);
         Task CreateAmenity(Amenity amenity);
         
         Task<Amenity> DeleteOneAmenityById(long id);
@@ -30,20 +30,20 @@ namespace AsyncApp.Services
 
         public async Task CreateAmenity(Amenity amenity)
         {
-            _context.Amenity.Add(amenity);
+            _context.Amenities.Add(amenity);
             await _context.SaveChangesAsync();
         }
 
         public async Task<Amenity> DeleteOneAmenityById(long id)
         {
-            var amenity = await _context.Amenity.FindAsync(id);
+            var amenity = await _context.Amenities.FindAsync(id);
 
             if (amenity == null)
             {
                 return null;
             }
 
-            _context.Amenity.Remove(amenity);
+            _context.Amenities.Remove(amenity);
             await _context.SaveChangesAsync();
 
             return amenity;
@@ -51,7 +51,12 @@ namespace AsyncApp.Services
 
         public async Task<IEnumerable<Amenity>> GetAllAmenities()
         {
-            return await _context.Amenity.ToListAsync();
+            return await _context.Amenities.ToListAsync();
+        }
+
+        public async Task<Amenity> GetAmenity(long id)
+        { 
+            var amenity = await _context.Amenities.FindAsync(id); return amenity;
         }
 
         public async Task<bool> UpdateAmenity(Amenity amenity)
@@ -77,7 +82,7 @@ namespace AsyncApp.Services
 
         private async Task<bool> AmenityExistsAsync(int id)
         {
-            return await _context.Amenity.AnyAsync(e => e.Id == id);
+            return await _context.Amenities.AnyAsync(e => e.Id == id);
         }
 
 

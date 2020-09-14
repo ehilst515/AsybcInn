@@ -38,13 +38,23 @@ namespace AsyncApp.Data
                     new Amenity { Id = 2, Name = "Air Conditioning" },
                     new Amenity { Id = 3, Name = "Coffee Maker" }
                 );
+
+            modelBuilder.Entity<RoomAmenity>()
+                .HasKey(roomAmenity => new
+                {
+                    roomAmenity.AmenityId,
+                    roomAmenity.RoomId
+                }
+                );
         }
 
-        public DbSet<Hotel> Hotel { get; set; }
+        public DbSet<Hotel> Hotels { get; set; }
 
-        public DbSet<Room> Room { get; set; }
+        public DbSet<Room> Rooms { get; set; }
 
-        public DbSet<Amenity> Amenity { get; set; }
+        public DbSet<Amenity> Amenities { get; set; }
+
+        public DbSet<RoomAmenity> RoomAmenities { get; set; }
 
     }
 }

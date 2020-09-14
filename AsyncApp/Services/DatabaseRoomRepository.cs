@@ -11,39 +11,62 @@ namespace AsyncApp.Services
 {
     public interface IRoomRepository
     {
-        Task<IEnumerable<Room>> GetAllAsync();
-        Task<Room> GetOneRoomById(long id);
+        Task<IEnumerable<Room> >GetAllAsync();
+        Task<Room> GetOneRoomByIdAsync(long id);
 
         Task CreateRoom(Room room);
         Task<bool> UpdateOneRoom(Room room);
         Task<Room> DeleteOneRoomById(long id);
+
+        Task AddAmenityToRoom(long roomId, long amenityId);
+        Task DeleteAmenityFromRoom(long roomId, long amenityId);
     }
 
     public class DatabaseRoomRepository: IRoomRepository
     {
         private readonly HotelDbContext _context;
 
+
         public DatabaseRoomRepository(HotelDbContext context)
         {
             _context = context;
         }
 
+        public async Task AddAmenityToRoom(long roomId, long amenityId)
+        {
+            var roomAmenity = new RoomAmenity
+            {
+                AmenityId = amenityId,
+                RoomId = roomId,
+            };
+            _context.RoomAmenities.Add(roomAmenity);
+            await _context.SaveChangesAsync();
+        }
+    
+
         public async Task CreateRoom(Room room)
         {
-            _context.Room.Add(room);
+            _context.Rooms.Add(room);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAmenityFromRoom(long roomId, long amenityId)
+        {
+            var roomAmenity = await _context.RoomAmenities.FindAsync(roomId, amenityId);
+            _context.RoomAmenities.Remove(roomAmenity);
             await _context.SaveChangesAsync();
         }
 
         public async Task<Room> DeleteOneRoomById(long id)
         {
-            var room = await _context.Room.FindAsync(id);
+            var room = await _context.Rooms.FindAsync(id);
 
             if (room == null)
             {
                 return null;
             }
 
-            _context.Room.Remove(room);
+            _context.Rooms.Remove(room);
             await _context.SaveChangesAsync();
 
             return room;
@@ -51,13 +74,20 @@ namespace AsyncApp.Services
 
         public async Task<IEnumerable<Room>> GetAllAsync()
         {
-            return await _context.Room.ToListAsync();
+            return await _context.Rooms.ToListAsync();
+            //return _context.Rooms
+            //    .Include(r => r.RoomAmenities)
+            //    .ToList();
         }
 
-        public async Task<Room> GetOneRoomById(long id)
+        public async Task<Room> GetOneRoomByIdAsync(long id)
         {
-            var room = await _context.Room.FindAsync(id);
-            return room;
+              var room = await _context.Rooms.FindAsync(id);
+          return room;
+
+            //return _context.Rooms
+            //    .Include(r => r.RoomAmenities)
+            //    .FirstOrDefault(r => r.Id == id);
         }
 
         public async Task<bool> UpdateOneRoom(Room room)
@@ -69,7 +99,7 @@ namespace AsyncApp.Services
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!await RoomExists((int)room.Id))
+                if (!await RoomExists(room.Id))
                 {
                     return false;
                 }
@@ -80,9 +110,9 @@ namespace AsyncApp.Services
             }
             return true;
         }
-        private async Task<bool> RoomExists(int id)
+        private async Task<bool> RoomExists(long id)
         {
-            return await _context.Room.AnyAsync(e => e.Id == id);
+            return await _context.Rooms.AnyAsync(e => e.Id == id);
         }
     }
 }

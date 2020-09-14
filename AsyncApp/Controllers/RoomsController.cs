@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AsyncApp.Data;
 using AsyncApp.Models;
 using AsyncApp.Services;
 
@@ -16,17 +11,16 @@ namespace AsyncApp.Controllers
     public class RoomsController : ControllerBase
     {
         private readonly IRoomRepository repository;
-        private readonly HotelDbContext _context;
 
-        public RoomsController(IRoomRepository repository, HotelDbContext context)
+
+        public RoomsController(IRoomRepository repository)
         {
-            _context = context;
             this.repository = repository;
         }
 
         // GET: api/Rooms
         [HttpGet]
-        public async Task<IEnumerable<Room>> GetRoom()
+        public async Task<IEnumerable<Room>> GetRooms()
         {
             return await repository.GetAllAsync();
         }
@@ -35,7 +29,7 @@ namespace AsyncApp.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Room>> GetRoom(long id)
         {
-            var room = await repository.GetOneRoomById(id);
+            var room = await repository.GetOneRoomByIdAsync(id);
 
             if (room == null)
             {
@@ -78,18 +72,27 @@ namespace AsyncApp.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Room>> DeleteRoom(long id)
         {
-            var room = await _context.Room.FindAsync(id);
+            var room = await repository.DeleteOneRoomById(id);
             if (room == null)
             {
                 return NotFound();
             }
 
-            _context.Room.Remove(room);
-            await _context.SaveChangesAsync();
-
-            return room;
+               return room;
         }
 
+        [HttpPost("{roomId}/Amenity/{amenityId}")]
+        public async Task<ActionResult<Amenity>> AddAmenityToRoom(long roomId, long amenityId)
+        {
+            await repository.AddAmenityToRoom(roomId, amenityId);
+            return CreatedAtAction(nameof(AddAmenityToRoom), new { roomId, amenityId }, null);
+        }
+        [HttpDelete("{roomId}/Amenity/{amenityId}")]
+        public async Task<ActionResult<Amenity>> DeleteAmenityFromRoom(long roomId, long amenityId)
+        {
+            await repository.DeleteAmenityFromRoom(roomId, amenityId);
+            return Ok();
+        }
 
     }
 }

@@ -16,11 +16,9 @@ namespace AsyncApp.Controllers
     public class AmenityController : ControllerBase
     {
         private readonly IAmenityRepository repository;
-        private readonly HotelDbContext _context;
 
-        public AmenityController(IAmenityRepository repository, HotelDbContext context)
+        public AmenityController(IAmenityRepository repository)
         {
-            _context = context;
             this.repository = repository;
         }
 
@@ -29,13 +27,14 @@ namespace AsyncApp.Controllers
         public async Task<IEnumerable<Amenity>> GetAmenity()
         {
             return await repository.GetAllAmenities();
+
         }
 
         // GET: api/Amenity/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Amenity>> GetAmenity(int id)
+        public async Task<ActionResult<Amenity>> GetAmenity(long id)
         {
-            var Amenity = await _context.Amenity.FindAsync(id);
+            var Amenity = await repository.GetAmenity(id);
 
             if (Amenity == null)
             {
@@ -76,16 +75,14 @@ namespace AsyncApp.Controllers
 
         // DELETE: api/Amenity/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Amenity>> DeleteAmenity(int id)
+        public async Task<ActionResult<Amenity>> DeleteAmenity(long id)
         {
-            var amenity = await _context.Amenity.FindAsync(id);
+            Amenity amenity = await repository.DeleteOneAmenityById(id);
+  
             if (amenity == null)
             {
                 return NotFound();
             }
-
-            _context.Amenity.Remove(amenity);
-            await _context.SaveChangesAsync();
 
             return amenity;
         }
