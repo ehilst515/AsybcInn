@@ -6,7 +6,13 @@ namespace AsyncApp.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_RoomAmenities_Amenity_AmenityId",
+                table: "RoomAmenities");
 
+            migrationBuilder.DropForeignKey(
+                name: "FK_RoomAmenities_Room_RoomId",
+                table: "RoomAmenities");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Room",
@@ -46,14 +52,6 @@ namespace AsyncApp.Migrations
             migrationBuilder.RenameTable(
                 name: "Amenity",
                 newName: "Amenities");
-
-            migrationBuilder.DropForeignKey(
-            name: "FK_RoomAmenities_Amenity_AmenityId",
-            table: "RoomAmenities");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_RoomAmenities_Room_RoomId",
-                table: "RoomAmenities");
 
             migrationBuilder.AlterColumn<long>(
                 name: "RoomId",
@@ -120,6 +118,14 @@ namespace AsyncApp.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_RoomAmenities_Amenities_AmenityId",
+                table: "RoomAmenities");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_RoomAmenities_Rooms_RoomId",
+                table: "RoomAmenities");
+
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Rooms",
                 table: "Rooms");
@@ -158,14 +164,6 @@ namespace AsyncApp.Migrations
             migrationBuilder.RenameTable(
                 name: "Amenity",
                 newName: "Amenities");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_RoomAmenities_Amenities_AmenityId",
-                table: "RoomAmenities");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_RoomAmenities_Rooms_RoomId",
-                table: "RoomAmenities");
 
             migrationBuilder.AlterColumn<int>(
                 name: "RoomId",
