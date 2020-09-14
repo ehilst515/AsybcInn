@@ -163,15 +163,6 @@ namespace AsyncApp.Migrations
                 nullable: false,
                 oldClrType: typeof(long));
 
-            migrationBuilder.AlterColumn<int>(
-                name: "Id",
-                table: "Room",
-                type: "int",
-                nullable: false,
-                oldClrType: typeof(long))
-                .Annotation("SqlServer:Identity", "1, 1")
-                .OldAnnotation("SqlServer:Identity", "1, 1");
-
             migrationBuilder.AddPrimaryKey(
                 name: "PK_Room",
                 table: "Room",
