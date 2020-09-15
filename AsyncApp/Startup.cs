@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Microsoft.OpenApi.Models;
 
 namespace AsyncApp
 {
@@ -37,6 +37,11 @@ namespace AsyncApp
                 options.UseSqlServer(connectionString);
             });
 
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Hotel Docs", Version = "v1" });
+            });
+
             services.AddTransient<IHotelRepository, DatabaseHotelRepository>();
 
             services.AddTransient<IAmenityRepository, DatabaseAmenityRepository>();
@@ -53,6 +58,17 @@ namespace AsyncApp
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger(options =>
+            {
+                options.RouteTemplate = "/api/{documentName}/swagger.json";
+            });
+
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("api/v1/swagger.json", "Hotel Docs");
+                options.RoutePrefix = "";
+            });
 
             app.UseRouting();
 
