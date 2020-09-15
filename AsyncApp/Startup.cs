@@ -41,6 +41,8 @@ namespace AsyncApp
 
             services.AddTransient<IAmenityRepository, DatabaseAmenityRepository>();
 
+            services.AddTransient<IHotelRoomRepository, DatabaseHotelRoomRepository>();
+
             services.AddTransient<IRoomRepository, DatabaseRoomRepository>();
         }
 

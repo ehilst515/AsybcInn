@@ -11,7 +11,7 @@ namespace AsyncApp.Services
 {
     public interface IRoomRepository
     {
-        Task<IEnumerable<Room> >GetAllAsync();
+        Task<IEnumerable<Room>>GetAllAsync();
         Task<Room> GetOneRoomByIdAsync(long id);
 
         Task CreateRoom(Room room);
@@ -20,6 +20,8 @@ namespace AsyncApp.Services
 
         Task AddAmenityToRoom(long roomId, long amenityId);
         Task DeleteAmenityFromRoom(long roomId, long amenityId);
+
+        Task AddRoomAmenity(long AmenityId, long RoomId);
     }
 
     public class DatabaseRoomRepository: IRoomRepository
@@ -39,10 +41,23 @@ namespace AsyncApp.Services
                 AmenityId = amenityId,
                 RoomId = roomId,
             };
+
             _context.RoomAmenities.Add(roomAmenity);
             await _context.SaveChangesAsync();
         }
-    
+
+        public async Task AddRoomAmenity(long amenityId, long roomId)
+        {
+            var roomAmenity = new RoomAmenity
+            {
+                AmenityId = amenityId,
+                RoomId = roomId
+            };
+
+            _context.RoomAmenities.Add(roomAmenity);
+            await _context.SaveChangesAsync();
+
+        }
 
         public async Task CreateRoom(Room room)
         {
@@ -74,10 +89,10 @@ namespace AsyncApp.Services
 
         public async Task<IEnumerable<Room>> GetAllAsync()
         {
-            return await _context.Rooms.ToListAsync();
-            //return _context.Rooms
-            //    .Include(r => r.RoomAmenities)
-            //    .ToList();
+            return await _context.Rooms
+                .Include(r => r.RoomAmenities)
+                .ThenInclude(ra => ra.Amenity)
+                .ToListAsync();
         }
 
         public async Task<Room> GetOneRoomByIdAsync(long id)
