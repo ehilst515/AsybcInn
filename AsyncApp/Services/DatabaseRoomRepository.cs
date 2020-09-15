@@ -74,10 +74,10 @@ namespace AsyncApp.Services
 
         public async Task<IEnumerable<Room>> GetAllAsync()
         {
-            return await _context.Rooms.ToListAsync();
-            //return _context.Rooms
-            //    .Include(r => r.RoomAmenities)
-            //    .ToList();
+            return await _context.Rooms
+                .Include(ra => ra.RoomAmenities)
+                .ThenInclude(a => a.Amenity)
+                .ToListAsync();
         }
 
         public async Task<Room> GetOneRoomByIdAsync(long id)
