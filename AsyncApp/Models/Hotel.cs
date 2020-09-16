@@ -15,5 +15,10 @@ namespace AsyncApp.Models
         public string State { get; set; }
         public string Phone { get; set; }
 
+
+        public long RoomId { get; set; }
+        public decimal Rate { get; set; }
+        public bool PetFriendly { get; set; }
+
     }
 }

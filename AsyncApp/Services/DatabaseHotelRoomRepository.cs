@@ -49,6 +49,20 @@ namespace AsyncApp.Services
         public async Task<IEnumerable<HotelRoom>> GetAllAsync()
         {
             return await _context.HotelRooms.ToListAsync();
+
+            //var hotelRoom = await _context.HotelRooms
+                //.Where(hr => hr.HotelId == hotelId)
+                //.Where(h => h.RoomNumber == roomNumber)
+                //.Include(hr => hr.Hotel)
+                //.ThenInclude(h => h.HotelRoom)
+                //.Include(hr => hr.Room)
+                //.ThenInclude(r => r.HotelRooms)
+                //.Include(hr => hr.Room)
+                //.ThenInclude(r => r.RoomAmenities)
+                //.ThenInclude(ra => ra.Amenity)
+                //.ThenInclude(a => a.RoomAmenities)
+                //.FirstOrDefaultAsync();
+                //    return hotelRoom;
         }
 
         public async Task<HotelRoom> GetOneByIdAsync(long id)
