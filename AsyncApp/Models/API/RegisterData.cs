@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsyncApp.Models.API
 {
+
     public class RegisterData
     {
         [Required]
