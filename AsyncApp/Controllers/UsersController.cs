@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AsyncApp.Models;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using AsyncApp.Models.API;
 using AsyncApp.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using AsyncApp.Models;
 
 namespace AsyncApp.Controllers
 {
@@ -23,10 +18,28 @@ namespace AsyncApp.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult<ApplicationUser>> Register(RegisterData data)
+        public async Task<ActionResult<UserDto>> Register(RegisterData data)
         {
-            ApplicationUser user = await userService.Register(data);
+            UserDto user = await userService.Register(data, this.ModelState);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
             return user;
         }
+
+        [HttpPost("Login")]
+        public async Task<ActionResult<UserDto>> Login(LoginData data)
+        {
+            var user = await userService.Authenticate(data.Username, data.Password);
+
+            if (user == null)
+                return Unauthorized();
+
+            return user;
+        }
+
     }
 }

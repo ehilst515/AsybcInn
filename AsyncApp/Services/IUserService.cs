@@ -1,6 +1,7 @@
 ﻿using AsyncApp.Models;
 using AsyncApp.Models.API;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Threading.Tasks;
 
@@ -9,7 +10,9 @@ namespace AsyncApp.Services
 {
     public interface IUserService
     {
-        Task<ApplicationUser> Register(RegisterData data);
+        Task<UserDto> Register(RegisterData data, ModelStateDictionary modelState);
+
+        Task<UserDto> Authenticate(string username, string password);
     }
 
     class IdentityUserService : IUserService
@@ -20,7 +23,24 @@ namespace AsyncApp.Services
         {
             this.userManager = userManager;
         }
-        public async Task<ApplicationUser> Register(RegisterData data)
+
+        public async Task<UserDto> Authenticate(string username, string password)
+        {
+            var user = await userManager.FindByNameAsync(username);
+
+            if (await userManager.CheckPasswordAsync(user, password))
+            {
+                return new UserDto
+                {
+                    Id = user.Id,
+                    Username = user.UserName,
+                };
+            }
+
+            return null;
+        }
+
+        public async Task<UserDto> Register(RegisterData data, ModelStateDictionary modelState)
         {
             var user = new ApplicationUser
             {
@@ -30,10 +50,26 @@ namespace AsyncApp.Services
 
             };
 
-            await userManager.CreateAsync(user, data.Password);
+            var result = await userManager.CreateAsync(user, data.Password);
 
-            return user;
+            if(result.Succeeded)
+                return new UserDto
+                {
+                    Id = user.Id,
+                    Username = user.UserName,
+                };
 
+            foreach(var error in result.Errors)
+            {
+                var errorKey =
+                    error.Code.Contains("Password") ? nameof(data.Password) :
+                    error.Code.Contains("Email") ? nameof(data.Email) :
+                    error.Code.Contains("Password") ? nameof(data.Username) :
+                    "";
+                modelState.AddModelError(errorKey, error.Description);
+            }
+
+            return null;
         }
     }
 }
