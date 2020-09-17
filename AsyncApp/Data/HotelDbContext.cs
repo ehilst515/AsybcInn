@@ -1,13 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using AsyncApp.Models;
 
 namespace AsyncApp.Data
 {
-    public class HotelDbContext : DbContext
+    public class HotelDbContext : IdentityDbContext<ApplicationUser>
     {
         public HotelDbContext(DbContextOptions options) : base(options)
         {
@@ -16,7 +13,7 @@ namespace AsyncApp.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Hotel>()
                 .HasData(
