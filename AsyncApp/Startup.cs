@@ -61,6 +61,10 @@ namespace AsyncApp
 
             services.AddTransient<IUserService, IdentityUserService>();
 
+            services.AddScoped<JwtTokenService>();
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

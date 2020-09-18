@@ -18,10 +18,12 @@ namespace AsyncApp.Services
     class IdentityUserService : IUserService
     {
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly JwtTokenService tokenService;
 
-        public IdentityUserService(UserManager<ApplicationUser> userManager)
+        public IdentityUserService(UserManager<ApplicationUser> userManager, JwtTokenService tokenService)
         {
             this.userManager = userManager;
+            this.tokenService = tokenService;
         }
 
         public async Task<UserDto> Authenticate(string username, string password)
