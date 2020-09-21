@@ -74,8 +74,9 @@ namespace AsyncApp
               .AddJwtBearer( options =>
               {
                   options.TokenValidationParameters = JwtTokenService.GetValidationParameters(Configuration);
-              }
-              );
+              });
+
+            services.AddAuthorization(options => { });
 
  
 
@@ -101,6 +102,9 @@ namespace AsyncApp
             });
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization(); 
 
             app.UseEndpoints(endpoints =>
             {

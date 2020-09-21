@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using AsyncApp.Models.API;
 using AsyncApp.Services;
 using AsyncApp.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AsyncApp.Controllers
 {
@@ -39,6 +41,13 @@ namespace AsyncApp.Controllers
                 return Unauthorized();
 
             return user;
+        }
+
+        [Authorize]
+        [HttpGetAttribute("Self")]
+        public async Task<ActionResult<UserDto>> Self()
+        {
+            return await userService.GetUser(this.User);
         }
 
     }

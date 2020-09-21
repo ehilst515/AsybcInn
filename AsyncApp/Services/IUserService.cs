@@ -3,6 +3,7 @@ using AsyncApp.Models.API;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 
@@ -13,6 +14,8 @@ namespace AsyncApp.Services
         Task<UserDto> Register(RegisterData data, ModelStateDictionary modelState);
 
         Task<UserDto> Authenticate(string username, string password);
+
+        Task<UserDto> GetUser(ClaimsPrincipal user);
     }
 
     class IdentityUserService : IUserService
@@ -36,10 +39,21 @@ namespace AsyncApp.Services
                 {
                     Id = user.Id,
                     Username = user.UserName,
+                    Token = await tokenService.GetToken(user, TimeSpan.FromMinutes(5)),
                 };
             }
 
             return null;
+        }
+
+        public async Task<UserDto> GetUser(ClaimsPrincipal principal)
+        {
+            var user = await userManager.GetUserAsync(principal);
+            return new UserDto
+            {
+                Id = user.Id,
+                Username = user.UserName,
+            };
         }
 
         public async Task<UserDto> Register(RegisterData data, ModelStateDictionary modelState)
@@ -59,6 +73,7 @@ namespace AsyncApp.Services
                 {
                     Id = user.Id,
                     Username = user.UserName,
+                    Token = await tokenService.GetToken(user, TimeSpan.FromMinutes(5)),
                 };
 
             foreach(var error in result.Errors)
