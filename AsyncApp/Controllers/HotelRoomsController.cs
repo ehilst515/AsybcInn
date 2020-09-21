@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AsyncApp.Models;
 using AsyncApp.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AsyncApp.Controllers
 {
@@ -42,6 +43,8 @@ namespace AsyncApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [Authorize(Roles = "District Manager")]
+        [Authorize(Roles = "Property Manager")]
         public async Task<IActionResult> PutHotelRoom(long id, HotelRoom hotelRoom)
         {
             if (id != hotelRoom.Id)
@@ -61,6 +64,8 @@ namespace AsyncApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize(Roles = "District Manager")]
+        [Authorize(Roles = "Property Manager")]
         public async Task<ActionResult<HotelRoom>> PostHotelRoom(HotelRoom hotelRoom)
         {
             await repository.CreateAsync(hotelRoom);
@@ -70,6 +75,8 @@ namespace AsyncApp.Controllers
 
         // DELETE: api/HotelRooms/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "District Manager")]
+        [Authorize(Roles = "Property Manager")]
         public async Task<ActionResult<HotelRoom>> DeleteHotelRoom(long id)
         {
             var hotelRoom = await repository.DeleteAsync(id);

@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using AsyncApp.Models;
+using System;
+using Microsoft.AspNetCore.Identity;
 
 namespace AsyncApp.Data
 {
@@ -43,12 +45,28 @@ namespace AsyncApp.Data
                     roomAmenity.RoomId
                  });
 
-                // modelBuilder.Entity<HotelRoom>()
-                //.HasKey(roomAmenity => new
-                //{
-                //    hotelRoom.HotelId,
-                //    hotelRoom.RoomNumber
-                //});
+            // modelBuilder.Entity<HotelRoom>()
+            //.HasKey(roomAmenity => new
+            //{
+            //    hotelRoom.HotelId,
+            //    hotelRoom.RoomNumber
+            //});
+
+            SeedRole(modelBuilder, "District Manager");
+            SeedRole(modelBuilder, "Property Manager");
+            SeedRole(modelBuilder, "Agent");
+        }
+
+        private void SeedRole(ModelBuilder modelBuilder, string roleName)
+        {
+            var role = new IdentityRole
+            {
+                Id = roleName.ToLower(),
+                Name = roleName,
+                NormalizedName = roleName.ToUpper(),
+                ConcurrencyStamp = Guid.Empty.ToString(),
+            };
+            modelBuilder.Entity<IdentityRole>().HasData(role);
         }
 
         public DbSet<Hotel> Hotels { get; set; }

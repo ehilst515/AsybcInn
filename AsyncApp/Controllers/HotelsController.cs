@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AsyncApp.Data;
 using AsyncApp.Models;
 using AsyncApp.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AsyncApp.Controllers
 {
@@ -49,6 +50,7 @@ namespace AsyncApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [Authorize(Roles = "District Manager")]
         public async Task<IActionResult> PutHotel(long id, Hotel hotel)
         {
             if (id != hotel.Id)
@@ -67,6 +69,7 @@ namespace AsyncApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize(Roles = "District Manager")]
         public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
         {
             await repository.CreateHotel(hotel);
@@ -76,6 +79,7 @@ namespace AsyncApp.Controllers
 
         // DELETE: api/Hotels/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "District Manager")]
         public async Task<ActionResult<Hotel>> DeleteHotel(long id)
         {
             var hotel = await repository.DeleteOneHotelById(id);

@@ -3,6 +3,7 @@ using AsyncApp.Models.API;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -53,6 +54,7 @@ namespace AsyncApp.Services
             {
                 Id = user.Id,
                 Username = user.UserName,
+                Roles = await userManager.GetRolesAsync(user),
             };
         }
 
@@ -68,13 +70,26 @@ namespace AsyncApp.Services
 
             var result = await userManager.CreateAsync(user, data.Password);
 
-            if(result.Succeeded)
+            if (result.Succeeded)
+            {
+                if(data.Roles?.Any() == true)
+                {
+                    await userManager.AddToRolesAsync(user, data.Roles);
+                }
+                else
+                {
+                    //defualt role
+                }
+               
                 return new UserDto
                 {
                     Id = user.Id,
                     Username = user.UserName,
                     Token = await tokenService.GetToken(user, TimeSpan.FromMinutes(5)),
+                    Roles = await userManager.GetRolesAsync(user),
                 };
+            };
+
 
             foreach(var error in result.Errors)
             {
