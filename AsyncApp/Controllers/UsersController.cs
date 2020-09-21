@@ -19,6 +19,7 @@ namespace AsyncApp.Controllers
             this.userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("Register")]
         public async Task<ActionResult<UserDto>> Register(RegisterData data)
         {
@@ -32,6 +33,7 @@ namespace AsyncApp.Controllers
             return user;
         }
 
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<ActionResult<UserDto>> Login(LoginData data)
         {
@@ -43,7 +45,7 @@ namespace AsyncApp.Controllers
             return user;
         }
 
-        [Authorize]
+
         [HttpGetAttribute("Self")]
         public async Task<ActionResult<UserDto>> Self()
         {
