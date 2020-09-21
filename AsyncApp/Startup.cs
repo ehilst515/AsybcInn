@@ -2,6 +2,7 @@ using System;
 using AsyncApp.Data;
 using AsyncApp.Models;
 using AsyncApp.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -63,7 +64,20 @@ namespace AsyncApp
 
             services.AddScoped<JwtTokenService>();
 
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
+            })
+              .AddJwtBearer( options =>
+              {
+                  options.TokenValidationParameters = JwtTokenService.GetValidationParameters(Configuration);
+              }
+              );
+
+ 
 
         }
 
