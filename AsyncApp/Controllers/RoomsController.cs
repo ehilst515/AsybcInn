@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AsyncApp.Models;
 using AsyncApp.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AsyncApp.Controllers
 {
@@ -43,6 +44,7 @@ namespace AsyncApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [Authorize(Roles = "District Manager")]
         public async Task<IActionResult> PutRoom(long id, Room room)
         {
             if (id != room.Id)
@@ -61,6 +63,7 @@ namespace AsyncApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize(Roles = "District Manager")]
         public async Task<ActionResult<Room>> PostRoom(Room room)
         {
             await repository.CreateRoom(room);
@@ -70,6 +73,7 @@ namespace AsyncApp.Controllers
 
         // DELETE: api/Rooms/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "District Manager")]
         public async Task<ActionResult<Room>> DeleteRoom(long id)
         {
             var room = await repository.DeleteOneRoomById(id);
@@ -82,12 +86,18 @@ namespace AsyncApp.Controllers
         }
 
         [HttpPost("{roomId}/Amenity/{amenityId}")]
+        [Authorize(Roles = "District Manager")]
+        [Authorize(Roles = "Property Manager")]
+        [Authorize(Roles = "Agent")]
         public async Task<ActionResult<Amenity>> AddAmenityToRoom(long roomId, long amenityId)
         {
             await repository.AddAmenityToRoom(roomId, amenityId);
             return CreatedAtAction(nameof(AddAmenityToRoom), new { roomId, amenityId }, null);
         }
         [HttpDelete("{roomId}/Amenity/{amenityId}")]
+        [Authorize(Roles = "District Manager")]
+        [Authorize(Roles = "Property Manager")]
+        [Authorize(Roles = "Agent")]
         public async Task<ActionResult<Amenity>> DeleteAmenityFromRoom(long roomId, long amenityId)
         {
             await repository.DeleteAmenityFromRoom(roomId, amenityId);

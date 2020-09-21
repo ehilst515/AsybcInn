@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AsyncApp.Data;
 using AsyncApp.Models;
 using AsyncApp.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AsyncApp.Controllers
 {
@@ -48,6 +49,8 @@ namespace AsyncApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [Authorize(Roles = "District Manager")]
+        [Authorize(Roles = "Property Manager")]
         public async Task<IActionResult> PutAmenity(int id, Amenity amenity)
         {
             if (id != amenity.Id)
@@ -66,6 +69,8 @@ namespace AsyncApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize(Roles = "District Manager")]
+        [Authorize(Roles = "Property Manager")]
         public async Task<ActionResult<Amenity>> PostAmenity(Amenity amenity)
         {
             await repository.CreateAmenity(amenity);
@@ -75,6 +80,7 @@ namespace AsyncApp.Controllers
 
         // DELETE: api/Amenity/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "District Manager")]
         public async Task<ActionResult<Amenity>> DeleteAmenity(long id)
         {
             Amenity amenity = await repository.DeleteOneAmenityById(id);

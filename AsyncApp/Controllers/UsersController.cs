@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using AsyncApp.Models.API;
 using AsyncApp.Services;
 using AsyncApp.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AsyncApp.Controllers
 {
@@ -17,6 +19,7 @@ namespace AsyncApp.Controllers
             this.userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("Register")]
         public async Task<ActionResult<UserDto>> Register(RegisterData data)
         {
@@ -30,6 +33,7 @@ namespace AsyncApp.Controllers
             return user;
         }
 
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<ActionResult<UserDto>> Login(LoginData data)
         {
@@ -39,6 +43,13 @@ namespace AsyncApp.Controllers
                 return Unauthorized();
 
             return user;
+        }
+
+
+        [HttpGetAttribute("Self")]
+        public async Task<ActionResult<UserDto>> Self()
+        {
+            return await userService.GetUser(this.User);
         }
 
     }

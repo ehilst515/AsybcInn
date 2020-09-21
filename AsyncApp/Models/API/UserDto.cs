@@ -10,5 +10,7 @@ namespace AsyncApp.Models.API
         public string Id { get; set; }
 
         public string Username { get; set; }
+        public string Token { get; internal set; }
+        public IList<string> Roles { get; internal set; }
     }
 }
